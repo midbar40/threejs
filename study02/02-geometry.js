@@ -1,5 +1,6 @@
-import * as THREE from "/coding/threejs/node_modules/three/build/three.module.js"; // three.js를 가져온다.
-import { OrbitControls } from "/coding/threejs/node_modules/three/examples/jsm/controls/OrbitControls" // OrbitControls를 가져온다.
+import * as THREE from "three";
+import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
+
 
  class App{
     constructor(){
@@ -40,7 +41,7 @@ import { OrbitControls } from "/coding/threejs/node_modules/three/examples/jsm/c
             0.1, 
             100
             );
-            camera.position.z = 2;
+            camera.position.z = 15;
             this._camera = camera;
     }
     _setupLight(){ // 빛을 만든다.
@@ -50,20 +51,47 @@ import { OrbitControls } from "/coding/threejs/node_modules/three/examples/jsm/c
         light.position.set(-1,2,4); // 위치를 정한다.
         this._scene.add(light); // 씬에 추가한다.
     }
-    _setupModel(){ // 큐브를 만든다.
-        const geometry = new THREE.BoxGeometry(1,1,1); // 큐브의 크기를 정한다.
-        const fillMaterial = new THREE.MeshPhongMaterial({ color: 0x515151 }); // 큐브의 색을 정한다.
-        const cube = new THREE.Mesh(geometry, fillMaterial); // 큐브를 만든다.
+    // _setupModel(){ // 큐브를 만든다.
+    //     const geometry = new THREE.TorusKnotGeometry(0.6, 0.1, 64, 32, 3, 4); // 큐브의 크기를 정한다.
+    //     const fillMaterial = new THREE.MeshPhongMaterial({ color: 0x515151 }); // 큐브의 색을 정한다.
+    //     const cube = new THREE.Mesh(geometry, fillMaterial); // 큐브를 만든다.
         
-        const lineMaterial = new THREE.LineBasicMaterial({ color: 0xffff00 }); // 선의 색을 정한다.
-        const line =  new THREE.LineSegments(new THREE.WireframeGeometry(geometry), lineMaterial); // 선을 만든다.
+    //     const lineMaterial = new THREE.LineBasicMaterial({ color: 0xffff00 }); // 선의 색을 정한다.
+    //     const line =  new THREE.LineSegments(
+    //         new THREE.WireframeGeometry(geometry), lineMaterial); // 선을 만든다.
 
-        const group = new THREE.Group(); // 큐브와 선을 그룹으로 묶는다.
-        group.add(cube); // 큐브를 그룹에 추가한다.
-        group.add(line); // 선을 그룹에 추가한다.
+    //     const group = new THREE.Group(); // 큐브와 선을 그룹으로 묶는다.
+    //     group.add(cube); // 큐브를 그룹에 추가한다.
+    //     group.add(line); // 선을 그룹에 추가한다.
 
-        this._scene.add(group); // 큐브를 씬에 추가한다.
-        this._cube = group; // 큐브를 나중에 회전시키기 위해서 _cube에 저장해둔다.
+    //     this._scene.add(group); // 큐브를 씬에 추가한다.
+    //     this._cube = group; // 큐브를 나중에 회전시키기 위해서 _cube에 저장해둔다.
+    // }
+    _setupModel(){
+        const shape = new THREE.Shape();
+        const x = -2.5, y = -5;
+        shape.moveTo(x + 2.5, y + 2.5);
+        shape.bezierCurveTo(x + 2.5, y + 2.5, x + 2, y, x, y)
+        shape.bezierCurveTo(x - 3, y , x - 3, y + 3.5, x - 3, x, y + 3.5)
+        shape.bezierCurveTo(x - 3, y + 5.5, x - 1.5, y + 7.7, x + 2.5, y + 9.5)
+        shape.bezierCurveTo(x + 6, y + 7.7, x + 8, y + 4.5, x + 8, y + 3.5)
+        shape.bezierCurveTo(x + 8, y + 3.5, x + 8, y, x + 5, y)
+        shape.bezierCurveTo(x + 3.5, y , x + 2.5, y + 2.5, x + 2.5, y + 2.5)
+
+        const geometry = new THREE.ShapeGeometry(shape);
+        const fillMaterial = new THREE.MeshPhongMaterial({ color: 0x515151 });
+        const cube = new THREE.Mesh(geometry, fillMaterial);
+
+        const lineMaterial = new THREE.LineBasicMaterial({ color: 0xffff00 });
+        const line = new THREE.LineSegments(
+            new THREE.WireframeGeometry(geometry), lineMaterial);
+        
+        const group = new THREE.Group();
+        group.add(cube);
+        group.add(line);    
+
+        this._scene.add(line);
+        this._cube = group;
     }
     
     resize(){ // 화면 크기가 변할 때마다 호출된다.

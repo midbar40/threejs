@@ -1,4 +1,4 @@
-import * as THREE from './node_modules/three/build/three.module.js'; // three.js를 가져온다.
+import * as THREE from '../node_modules/three/build/three.module.js'; // three.js를 가져온다.
 
  class App{
     constructor(){
@@ -19,8 +19,8 @@ import * as THREE from './node_modules/three/build/three.module.js'; // three.js
         this._setupCamera();
         this._setupLight();
         this._setupModel();
-
         window.onresize = this.resize.bind(this); // 화면 크기가 변할 때마다 resize 함수를 호출한, bind(this)를 해줘야 this가 App을 가리킨다.
+
         this.resize(); // 처음에 한번 호출해준다.
 
         requestAnimationFrame(this.render.bind(this)); // 렌더링을 반복한다, bind(this)를 해줘야 this가 App을 가리킨다.   
